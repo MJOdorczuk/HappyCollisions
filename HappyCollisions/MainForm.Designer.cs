@@ -38,6 +38,7 @@
             this.MouseMove += (sender, e) => { };
             this.MouseClick += (sender, e) => { };
             this.MouseWheel += (sender, e) => ScrollUpdate(e.Delta);
+            this.KeyDown += (sender, e) => KeyDownUpdate(e);
         }
 
         #endregion

@@ -154,8 +154,8 @@ namespace HappyCollisions.Display
             lock (lockObject)
             {
                 mouseLocked = false;
-                camera.Offset(new Point(lastMouseLock.X - currentMouse.X, 
-                                        lastMouseLock.Y - currentMouse.Y));
+                camera.Translate(new Point(lastMouseLock.X - currentMouse.X, 
+                                           lastMouseLock.Y - currentMouse.Y));
             }
         }
 
@@ -164,22 +164,29 @@ namespace HappyCollisions.Display
             camera.Scale(scale);
         }
 
+        public void Rotate(double angle)
+        {
+            this.camera.Rotate(angle);
+        }
+
         private void Tick()
         {
             var graphics = DisplayGraphics;
-            var rectangle = DisplayRectangle;
+            var rectangle = Expand(DisplayRectangle);
             if(graphics is null)
             {
                 return;
             }
             var buffer = BufferedGraphicsManager.Current.Allocate(graphics, rectangle);
-            buffer.Graphics.Clear(Color.FromArgb(0, 0, 64));
             var offset = new Point(0, 0);
             if (mouseLocked)
             {
                 offset = new Point(lastMouseLock.X - currentMouse.X, lastMouseLock.Y - currentMouse.Y);
             }
+            camera.Adjust(buffer, DisplayRectangle);
+            buffer.Graphics.Clear(Color.FromArgb(0, 0, 64));
             camera.DrawMesh(buffer, rectangle, offset);
+            
             try
             {
                 buffer.Render();
@@ -189,6 +196,14 @@ namespace HappyCollisions.Display
             {
 
             }
+        }
+
+        private Rectangle Expand(Rectangle rectangle)
+        {
+            var diagonal = (int)Math.Sqrt(rectangle.Width * rectangle.Width + rectangle.Height * rectangle.Height);
+            var x0 = rectangle.X + rectangle.Width / 2;
+            var y0 = rectangle.Y + rectangle.Height / 2;
+            return new Rectangle(x0 - (diagonal / 2), y0 - (diagonal / 2), diagonal, diagonal);
         }
     }
 }

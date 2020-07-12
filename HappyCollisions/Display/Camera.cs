@@ -1,25 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 namespace HappyCollisions.Display
 {
     public class Camera
     {
+        private static readonly int MESH_BASE = 5;
+
         private readonly object lockObject = new object();
 
         private double x = 0.0;
         private double y = 0.0;
         private double dx = 1.0;
         private double dy = 1.0;
+        private double angle = 0.0;
 
-        public void Offset(Point offset)
+        public void Translate(Point offset)
         {
+            var rotated = RotatePoint(offset, this.angle);
             lock (lockObject)
             {
-                this.x += offset.X * this.dx;
-                this.y += offset.Y * this.dy;
+                this.x += rotated.X * this.dx;
+                this.y += rotated.Y * this.dy;
             }
         }
 
@@ -32,99 +34,127 @@ namespace HappyCollisions.Display
             }
         }
 
-        public void DrawMesh(BufferedGraphics buffer, Rectangle rectangle, Point offset)
+        public void Rotate(double angle)
         {
-            double x, y, dx, dy;
             lock (lockObject)
             {
-                x = this.x + offset.X * this.dx;
-                y = this.y + offset.Y * this.dy;
-                dx = this.dx;
-                dy = this.dy;
+                this.angle += angle;
             }
+        }
+
+        public void DrawMesh(BufferedGraphics buffer, Rectangle rectangle, Point offset)
+        {
             var width = rectangle.Width;
             var height = rectangle.Height;
-            var rightX = x + dx * width * 0.5;
-            var leftX = x - dx * width * 0.5;
-            var topY = y - dy * height * 0.5;
-            var bottomY = y + dy * height * 0.5;
-            var maxDim = Math.Max(width * dx, height * dy);
+            var maxDim = Math.Max(width * this.dx, height * this.dy);
+            var rotated = RotatePoint(offset, this.angle);
+            var ox = this.x + rotated.X * this.dx;
+            var oy = this.y + rotated.Y * this.dy;
+            var leftX = ox - width * this.dx * 0.5;
+            var topY = oy - height * this.dy * 0.5;
+            var rightX = ox + width * this.dx * 0.5;
+            var bottomY = oy + height * this.dy * 0.5;
 
-            double diff = 1.0;
+            var diff = 1.0;
             if (diff > maxDim)
             {
                 while(diff > maxDim)
                 {
-                    diff /= 5;
+                    diff /= MESH_BASE;
                 }
             }
             else
             {
-                while(diff * 5 < maxDim)
+                while(diff * MESH_BASE < maxDim)
                 {
-                    diff *= 5;
+                    diff *= MESH_BASE;
                 }
             }
-            diff /= 25;
+            diff /= MESH_BASE * MESH_BASE;
 
             int a = (int)Math.Ceiling(leftX / diff);
             for (int i = a; i * diff < rightX; i++)
             {
-                int _x = (int)(0.5 * width + (i * diff - x) / dx);
-                if (i % 25 == 0)
+                int x = (int)((i * diff - ox) / this.dx);
+                if (i % (MESH_BASE * MESH_BASE) == 0)
                 {
-                    var pen = new Pen(Color.FromArgb((int)(3187 * diff / maxDim), 255, 255, 255))
-                    {
-                        Width = (float)Math.Sqrt((int)(625 * diff / maxDim) / dx)
-                    };
-                    buffer.Graphics.DrawLine(pen, _x, 0, _x, height);
+                    DrawVerticalLine(diff / (width * this.dx), 
+                                     x, 
+                                     buffer.Graphics, 
+                                     height);
                 }
-                else if (i % 5 == 0)
+                else if (i % MESH_BASE == 0)
                 {
-                    var pen = new Pen(Color.FromArgb((int)(1593 * diff / maxDim), 255, 255, 255))
-                    {
-                        Width = (float)Math.Sqrt((int)(125 * diff / maxDim) / dx)
-                    };
-                    buffer.Graphics.DrawLine(pen, _x, 0, _x, height);
+                    DrawVerticalLine(diff / (width * MESH_BASE * this.dx), 
+                                     x, 
+                                     buffer.Graphics, 
+                                     height);
                 }
                 else
                 {
-                    var pen = new Pen(Color.FromArgb((int)(796 * diff / maxDim), 255, 255, 255))
-                    {
-                        Width = (float)Math.Sqrt((int)(25 * diff / maxDim) / dx)
-                    };
-                    buffer.Graphics.DrawLine(pen, _x, 0, _x, height);
+                    DrawVerticalLine(diff / (width * MESH_BASE * MESH_BASE * this.dx), 
+                                     x, 
+                                     buffer.Graphics, 
+                                     height);
                 }
             }
             a = (int)Math.Ceiling(topY / diff);
             for (int i = a; i * diff < bottomY; i++)
             {
-                int _y = (int)(0.5 * height + (i * diff - y) / dy);
-                if (i % 25 == 0)
+                int y = (int)((i * diff - oy) / this.dy);
+                if (i % (MESH_BASE * MESH_BASE) == 0)
                 {
-                    var pen = new Pen(Color.FromArgb((int)(3187 * diff / maxDim), 255, 255, 255))
-                    {
-                        Width = (float)Math.Sqrt((int)(625 * diff / maxDim) / dy)
-                    };
-                    buffer.Graphics.DrawLine(pen, 0, _y, width, _y);
+                    DrawHorizontalLine(diff / (height * this.dx), 
+                                       y, 
+                                       buffer.Graphics, 
+                                       width);
                 }
-                else if (i % 5 == 0)
+                else if (i % MESH_BASE == 0)
                 {
-                    var pen = new Pen(Color.FromArgb((int)(1593 * diff / maxDim), 255, 255, 255))
-                    {
-                        Width = (float)Math.Sqrt((int)(125 * diff / maxDim) / dy)
-                    };
-                    buffer.Graphics.DrawLine(pen, 0, _y, width, _y);
+                    DrawHorizontalLine(diff / (height * MESH_BASE * this.dx), 
+                                       y, 
+                                       buffer.Graphics, 
+                                       width);
                 }
                 else
                 {
-                    var pen = new Pen(Color.FromArgb((int)(796 * diff / maxDim), 255, 255, 255))
-                    {
-                        Width = (float)Math.Sqrt((int)(25 * diff / maxDim) / dy)
-                    };
-                    buffer.Graphics.DrawLine(pen, 0, _y, width, _y);
+                    DrawHorizontalLine(diff / (height * MESH_BASE * MESH_BASE * this.dx), 
+                                       y, 
+                                       buffer.Graphics, 
+                                       width);
                 }
             }
+        }
+
+        public void Adjust(BufferedGraphics buffer, Rectangle rectangle)
+        {
+            buffer.Graphics.TranslateTransform(rectangle.Width / 2, rectangle.Height / 2);
+            buffer.Graphics.RotateTransform((float)angle);
+        }
+
+        private void DrawVerticalLine(double fract, int x, Graphics graphics, int height)
+        {
+            var pen = new Pen(Color.FromArgb((int)Math.Sqrt(255 * 255 * fract), 255, 255, 255))
+            {
+                Width = 4
+            };
+            graphics.DrawLine(pen, x, -height / 2, x, height / 2);
+        }
+
+        private void DrawHorizontalLine(double fract, int y, Graphics graphics, int width)
+        {
+            var pen = new Pen(Color.FromArgb((int)Math.Sqrt(255 * 255 * fract), 255, 255, 255))
+            {
+                Width = 4
+            };
+            graphics.DrawLine(pen, -width / 2, y, width / 2, y);
+        }
+
+        private Point RotatePoint(Point point, double angle)
+        {
+            angle *= Math.PI / 180;
+            return new Point((int)(point.X * Math.Cos(angle) + point.Y * Math.Sin(angle)),
+                             (int)(point.Y * Math.Cos(angle) - point.X * Math.Sin(angle)));
         }
     }
 }
