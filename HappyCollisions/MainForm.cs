@@ -44,5 +44,18 @@ namespace HappyCollisions
         {
             displayManager.Scale(1 + (60 - diff) * 0.001);
         }
+
+        private void KeyDownUpdate(KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                    displayManager.Rotate(-5);
+                    break;
+                case Keys.Right:
+                    displayManager.Rotate(5);
+                    break;
+            }
+        }
     }
 }
