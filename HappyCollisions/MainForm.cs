@@ -40,9 +40,9 @@ namespace HappyCollisions
             displayManager.UnlockMouse();
         }
 
-        private void ScrollUpdate(double diff)
+        private void ScrollUpdate(float diff, MouseEventArgs e)
         {
-            displayManager.Scale(1 + (60 - diff) * 0.001);
+            displayManager.Scale(1 + (60 - diff) * 0.001f, e.Location);
         }
 
         private void KeyDownUpdate(KeyEventArgs e)

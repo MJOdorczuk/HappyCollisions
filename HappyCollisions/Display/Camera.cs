@@ -9,11 +9,11 @@ namespace HappyCollisions.Display
 
         private readonly object lockObject = new object();
 
-        private double x = 0.0;
-        private double y = 0.0;
-        private double dx = 1.0;
-        private double dy = 1.0;
-        private double angle = 0.0;
+        private float x = 0;
+        private float y = 0;
+        private float dx = 1;
+        private float dy = 1;
+        private float angle = 0;
 
         public void Translate(Point offset)
         {
@@ -25,16 +25,21 @@ namespace HappyCollisions.Display
             }
         }
 
-        public void Scale(double scale)
+        public void Zoom(float scale, Point target)
         {
+            var rotated = RotatePoint(target, - this.angle);
+            var newFocus = new PointF(this.x + target.X * this.dx * (1 - scale), 
+                                      this.y + target.Y * this.dy * (1 - scale));
             lock (lockObject)
             {
+                this.x = newFocus.X;
+                this.y = newFocus.Y;
                 this.dx *= scale;
                 this.dy *= scale;
             }
         }
 
-        public void Rotate(double angle)
+        public void Rotate(float angle)
         {
             lock (lockObject)
             {

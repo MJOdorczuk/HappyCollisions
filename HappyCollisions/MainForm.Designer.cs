@@ -37,7 +37,7 @@
             this.MouseUp += (sender, e) => MouseUpUpdate();
             this.MouseMove += (sender, e) => { };
             this.MouseClick += (sender, e) => { };
-            this.MouseWheel += (sender, e) => ScrollUpdate(e.Delta);
+            this.MouseWheel += (sender, e) => ScrollUpdate(e.Delta, e);
             this.KeyDown += (sender, e) => KeyDownUpdate(e);
         }
 
