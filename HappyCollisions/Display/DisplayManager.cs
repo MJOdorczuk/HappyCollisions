@@ -102,6 +102,14 @@ namespace HappyCollisions.Display
                 }
             }
         }
+        public Point MidPoint
+        {
+            get
+            {
+                var rectangle = DisplayRectangle;
+                return new Point(rectangle.Width / 2, rectangle.Height / 2);
+            }
+        }
         public Point CurrentMouse
         {
             get
@@ -159,12 +167,14 @@ namespace HappyCollisions.Display
             }
         }
 
-        public void Scale(double scale)
+        public void Scale(float scale, Point mouseCoords)
         {
-            camera.Scale(scale);
+            var midPoint = MidPoint;
+            var target = new Point(mouseCoords.X - midPoint.X, mouseCoords.Y - midPoint.Y);
+            camera.Zoom(scale, target);
         }
 
-        public void Rotate(double angle)
+        public void Rotate(float angle)
         {
             this.camera.Rotate(angle);
         }
@@ -192,7 +202,7 @@ namespace HappyCollisions.Display
                 buffer.Render();
                 buffer.Dispose();
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
