@@ -15,6 +15,15 @@ namespace HappyCollisions.Display
         private float dy = 1;
         private float angle = 0;
 
+        public PointF Focus(Point offset)
+        {
+            var rotated = RotatePoint(offset, this.angle);
+            return new PointF(this.x + rotated.X * this.dx, this.y + rotated.Y * this.dy);
+        }
+
+        public float DX { get => dx; }
+        public float DY { get => dy; }
+
         public void Translate(Point offset)
         {
             var rotated = RotatePoint(offset, this.angle);
