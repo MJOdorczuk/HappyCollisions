@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HappyCollisions.Actors;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -9,6 +10,12 @@ namespace HappyCollisions.Display
 {
     public class DisplayManager
     {
+        private readonly object lockObject = new object();
+
+        private readonly Camera camera = new Camera();
+
+        private readonly ActorDisplayManager actorDisplayManager = new ActorDisplayManager();
+
         private bool read = true;
         private bool disposing = false;
         private bool mouseLocked = false;
@@ -16,8 +23,11 @@ namespace HappyCollisions.Display
         private Point currentMouse;
         private Graphics displayGraphics;
         private Rectangle displayRectangle;
-        private readonly object lockObject = new object();
-        private readonly Camera camera = new Camera();
+        private List<IActor> actors = new List<IActor>()
+        {
+            new PointActor(0.5, 2.1, 0, 0)
+        };
+        
 
         private bool Disposing
         {
@@ -196,7 +206,11 @@ namespace HappyCollisions.Display
             camera.Adjust(buffer, DisplayRectangle);
             buffer.Graphics.Clear(Color.FromArgb(0, 0, 64));
             camera.DrawMesh(buffer, rectangle, offset);
-            
+            actors.ForEach(actor => actorDisplayManager.Display(actor, 
+                                                                buffer.Graphics, 
+                                                                camera.Focus(offset), 
+                                                                camera.DX, 
+                                                                camera.DY));
             try
             {
                 buffer.Render();
