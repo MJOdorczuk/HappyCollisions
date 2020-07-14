@@ -1,4 +1,5 @@
 ﻿using HappyCollisions.Actors;
+using HappyCollisions.Physics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,6 +17,8 @@ namespace HappyCollisions.Display
 
         private readonly ActorDisplayManager actorDisplayManager = new ActorDisplayManager();
 
+        private readonly WorldPhysics physics = new WorldPhysics();
+
         private bool read = true;
         private bool disposing = false;
         private bool mouseLocked = false;
@@ -23,12 +26,7 @@ namespace HappyCollisions.Display
         private Point currentMouse;
         private Graphics displayGraphics;
         private Rectangle displayRectangle;
-        private List<IActor> actors = new List<IActor>()
-        {
-            new PointActor(0.5, 2.1, 0, 0)
-        };
         
-
         private bool Disposing
         {
             get
@@ -143,6 +141,7 @@ namespace HappyCollisions.Display
         public DisplayManager(Control parent)
         {
             parent.Disposed += (sender, e) => Disposing = true;
+            this.physics.AddActor(new PointActor(5, -27, 1, -2));
             new Task(() =>
             {
                 while (!Disposing)
@@ -206,11 +205,12 @@ namespace HappyCollisions.Display
             camera.Adjust(buffer, DisplayRectangle);
             buffer.Graphics.Clear(Color.FromArgb(0, 0, 64));
             camera.DrawMesh(buffer, rectangle, offset);
-            actors.ForEach(actor => actorDisplayManager.Display(actor, 
-                                                                buffer.Graphics, 
-                                                                camera.Focus(offset), 
-                                                                camera.DX, 
-                                                                camera.DY));
+            this.physics.Actors.ForEach(actor => actorDisplayManager.Display(actor, 
+                                                                             buffer.Graphics, 
+                                                                             camera.Focus(offset), 
+                                                                             camera.DX, 
+                                                                             camera.DY));
+            this.physics.Tick();
             try
             {
                 buffer.Render();
