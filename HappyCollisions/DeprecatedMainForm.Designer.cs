@@ -1,6 +1,6 @@
 ﻿namespace HappyCollisions
 {
-    partial class MainForm
+    partial class DeprecatedMainForm
     {
         /// <summary>
         /// Required designer variable.

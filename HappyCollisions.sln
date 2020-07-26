@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyCollisions", "HappyCollisions\HappyCollisions.csproj", "{1A3BC020-F99E-4B2A-9EF5-B4775DD53EF3}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "CollisionFun", "CollisionFun\CollisionFun.fsproj", "{B30D45AD-BF46-432D-9692-DAB549E5345D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1A3BC020-F99E-4B2A-9EF5-B4775DD53EF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A3BC020-F99E-4B2A-9EF5-B4775DD53EF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A3BC020-F99E-4B2A-9EF5-B4775DD53EF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A3BC020-F99E-4B2A-9EF5-B4775DD53EF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B30D45AD-BF46-432D-9692-DAB549E5345D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B30D45AD-BF46-432D-9692-DAB549E5345D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B30D45AD-BF46-432D-9692-DAB549E5345D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B30D45AD-BF46-432D-9692-DAB549E5345D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

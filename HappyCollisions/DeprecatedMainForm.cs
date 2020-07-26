@@ -9,12 +9,12 @@ using System.Windows.Forms;
 
 namespace HappyCollisions
 {
-    public partial class MainForm : Form
+    public partial class DeprecatedMainForm : Form
     {
         private readonly DisplayManager displayManager;
         private readonly Timer timer = new Timer();
 
-        public MainForm()
+        public DeprecatedMainForm()
         {
             displayManager = new DisplayManager(this);
             InitializeComponent();
