@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Interfaces.fs" />
+    <Compile Include="Physics\WorldPhysics.fs" />
+    <Compile Include="Actors\PointActor.fs" />
+    <Compile Include="Drawing\ActorDrawing.fs" />
+    <Compile Include="Drawing\Background.fs" />
+    <Compile Include="Display\Camera.fs" />
+    <Compile Include="IOManager\ApplicationData.fs" />
+    <Compile Include="IOManager\Input\KeyInput.fs" />
+    <Compile Include="IOManager\Input\MouseInput.fs" />
+    <Compile Include="IOManager\Input\InputControls.fs" />
+    <Compile Include="IOManager\WindowApplication.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTK.NetStandard" Version="1.0.5.22" />
+  </ItemGroup>
+
+</Project>
