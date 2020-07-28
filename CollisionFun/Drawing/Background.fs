@@ -3,6 +3,7 @@
 open OpenTK
 open OpenTK.Graphics.OpenGL
 open System
+open Drawing.Graphics
 
 let maxDimension (delimiters : Vector2d list) : float =
     let xs = delimiters |> List.map (fun v -> v.X) in
@@ -28,12 +29,6 @@ let calculateMeshLineAlphaFactor (meshSize : float) (maxD : float) : float =
     (meshSize / maxD)
     |> Math.Sqrt
 
-
-let drawLine (color : Color) (a : Vector2d) (b : Vector2d) : unit =
-    do GL.Color4 color
-    do GL.Vertex2 a
-    do GL.Vertex2 b
-
 type BackgroundPainter(step : int, depth : int, background : Color, mesh : Color) =
     let mutable backgroundColor : Color = background
     let mutable meshColor : Color = mesh
@@ -49,7 +44,6 @@ type BackgroundPainter(step : int, depth : int, background : Color, mesh : Color
                               (toDisplay : Vector2d -> Vector2d) =
         
         do GL.LineWidth 2.0f
-        do GL.Begin PrimitiveType.Lines
         let xs = delimiters |> List.map (fun v -> v.X)
         let ys = delimiters |> List.map (fun v -> v.Y)
         let minX, maxX = List.min xs, List.max xs
@@ -66,6 +60,7 @@ type BackgroundPainter(step : int, depth : int, background : Color, mesh : Color
                                            int meshColor.R, 
                                            int meshColor.G, 
                                            int meshColor.B)
+                let drawLines = DrawLines color
                 do [-oneSideCount..oneSideCount] 
                    |> List.filter (fun i -> i % step <> 0)
                    |> List.map float
@@ -73,8 +68,7 @@ type BackgroundPainter(step : int, depth : int, background : Color, mesh : Color
                    |> List.filter (fun x -> x >= minX && x <= maxX)
                    |> List.map (fun x -> Vector2d(x, minY), Vector2d(x, maxY))
                    |> List.map (fun (u, v) -> toDisplay u, toDisplay v)
-                   |> List.map (fun (u, v) -> drawLine color u v)
-                   |> ignore
+                   |> drawLines
                 do drawVerticalLines (oneSideCount * step) (diff / float step) (depth - 1)
         let rec drawHorizontalLines (oneSideCount : int) (diff : float) (depth : int) =
             match depth with
@@ -85,6 +79,7 @@ type BackgroundPainter(step : int, depth : int, background : Color, mesh : Color
                                            int meshColor.R, 
                                            int meshColor.G, 
                                            int meshColor.B)
+                let drawLines = DrawLines color
                 do [-oneSideCount..oneSideCount] 
                    |> List.filter (fun i -> i % step <> 0)
                    |> List.map float
@@ -92,13 +87,11 @@ type BackgroundPainter(step : int, depth : int, background : Color, mesh : Color
                    |> List.filter (fun y -> y >= minY && y <= maxY)
                    |> List.map (fun y -> Vector2d(minX, y), Vector2d(maxX, y))
                    |> List.map (fun (u, v) -> toDisplay u, toDisplay v)
-                   |> List.map (fun (u, v) -> drawLine color u v)
-                   |> ignore
+                   |> drawLines
                 do drawHorizontalLines (oneSideCount * step) (diff / float step) (depth - 1)
         do drawVerticalLines step (baseSize / float step) (depth)
         do drawHorizontalLines step (baseSize / float step) (depth)
         let a, b = toDisplay (Vector2d(centerPoint.X, minY)), toDisplay (Vector2d(centerPoint.X, maxY))
-        do drawLine meshColor a b
+        do DrawLine meshColor a b
         let a, b = toDisplay (Vector2d(minX, centerPoint.Y)), toDisplay (Vector2d(maxX, centerPoint.Y))
-        do drawLine meshColor a b
-        do GL.End ()
+        do DrawLine meshColor a b
