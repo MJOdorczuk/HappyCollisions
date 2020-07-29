@@ -9,6 +9,7 @@
     <Compile Include="Interfaces.fs" />
     <Compile Include="Physics\WorldPhysics.fs" />
     <Compile Include="Actors\PointActor.fs" />
+    <Compile Include="Drawing\Graphics.fs" />
     <Compile Include="Drawing\ActorDrawing.fs" />
     <Compile Include="Drawing\Background.fs" />
     <Compile Include="Display\Camera.fs" />

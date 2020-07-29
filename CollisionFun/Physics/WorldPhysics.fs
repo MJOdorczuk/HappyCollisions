@@ -6,7 +6,7 @@ open System
 
 type CustomWorldPhysics () =
     let mutable actors : IActor list = []
-    let GRAVITY_CONSTANT : Vector2d = Vector2d(0.0, -0.0001)
+    let GRAVITY_CONSTANT : Vector2d = Vector2d(0.0, -0.01)
     let moveActors (delta : float) : unit =
         actors
         |> List.map (fun actor -> actor.Move (actor.Velocity * delta))

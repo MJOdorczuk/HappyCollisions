@@ -61,7 +61,7 @@ type public Application(window : GameWindow) =
     do window.MouseWheel.Add MouseWheelMove
     do window.KeyDown.Add KeyDown
     do window.KeyUp.Add KeyUp
-    let actor = PointActor(Vector2d(1.27, 0.0), Vector2d(1.0, 2.0))
+    let actor = PointActor(Vector2d(0.0, 0.0), Vector2d(1.0, 0.0))
     do data.Physics.AddActor actor
     interface IApplication with
         member __.Camera = data.Camera
