@@ -17,5 +17,7 @@ type ApplicationData(windowBoundaries : Rectangle) =
             physics
         member __.ActorDisplayer : IActorDisplayer =
             displayer
-        member val Mode = CameraControl with get, set
+        member val InputMode = StandardControl with get, set
         member val WindowBoundaries = windowBoundaries with get, set
+        member val BuildMode : BuildMode = BuildMode.Point with get, set
+        member val CachedActor : Actor option = None with get, set

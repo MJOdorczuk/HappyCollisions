@@ -11,7 +11,12 @@ let OnMouseButtonDown (data : IApplicationData) (e : MouseButtonEventArgs) : uni
         e.Position
         |> mapMouseOnDisplay data
         |> middleMouseButtonDown data
+    | MouseButton.Left ->
+        e.Position
+        |> mapMouseOnDisplay data
+        |> leftMouseButtonDown data
     | _ -> ()
+
 
 let OnMouseButtonUp (data : IApplicationData) (e : MouseButtonEventArgs) : unit =
     match e.Button with

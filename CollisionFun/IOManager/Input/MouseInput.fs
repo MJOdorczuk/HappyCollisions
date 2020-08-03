@@ -2,6 +2,7 @@
 
 open OpenTK
 open Interfaces
+open Actors.ActorData
 
 let mapMouseOnDisplay (data : IApplicationData) (point : Point) : Vector2d =
     let width = float data.WindowBoundaries.Width
@@ -11,21 +12,34 @@ let mapMouseOnDisplay (data : IApplicationData) (point : Point) : Vector2d =
     Vector2d(x, y)
 
 let middleMouseButtonDown (data : IApplicationData) (point : Vector2d) : unit =
-    match data.Mode with
-    | CameraControl ->
+    match data.InputMode with
+    | StandardControl ->
         do point
            |> DisplayPoint
            |> data.Camera.SaveAnchor
-        data.Mode <- CameraPan
+        data.InputMode <- CameraPan
     | _ -> ()
 
 let middleMouseButtonUp (data : IApplicationData) (point : Vector2d) : unit =
-    match data.Mode with
-    | CameraPan -> data.Mode <- CameraControl
+    match data.InputMode with
+    | CameraPan -> 
+        data.InputMode <- StandardControl
+    | _ -> ()
+
+let leftMouseButtonDown (data : IApplicationData) (point : Vector2d) : unit =
+    match data.InputMode with
+    | StandardControl ->
+        point
+        |> DisplayPoint
+        |> data.Camera.ProjectToWorld
+        |> ActorData
+        :> IActorData
+        |> PointActor
+        |> data.Physics.AddActor
     | _ -> ()
 
 let mouseMove (data : IApplicationData) (point : Vector2d) : unit =
-    match data.Mode with
+    match data.InputMode with
     | CameraPan ->
         do point
            |> DisplayPoint
@@ -33,7 +47,7 @@ let mouseMove (data : IApplicationData) (point : Vector2d) : unit =
     | _ -> ()
 
 let wheelMove (data : IApplicationData) (point : Vector2d) (factor : float) : unit =
-    match data.Mode with
-    | CameraControl ->
+    match data.InputMode with
+    | StandardControl ->
         data.Camera.Zoom factor (WorldPoint point)
     | _ -> ()
