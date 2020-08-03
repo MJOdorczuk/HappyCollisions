@@ -9,7 +9,7 @@ open OpenTK.Input
 open Drawing.Background
 open IOManager.Input.InputControls
 open IOManager.ApplicationData
-open Actors.PointActor
+open Actors.ActorData
 
 let WindowLoad (e : EventArgs) : unit =
     ()
@@ -61,7 +61,10 @@ type public Application(window : GameWindow) =
     do window.MouseWheel.Add MouseWheelMove
     do window.KeyDown.Add KeyDown
     do window.KeyUp.Add KeyUp
-    let actor = PointActor(Vector2d(0.0, 0.0), Vector2d(1.0, 0.0))
+    let actor = 
+        ActorData(Vector2d(0.0, 0.0), Vector2d(0.1, 0.5))
+        :> IActorData
+        |> PointActor
     do data.Physics.AddActor actor
     interface IApplication with
         member __.Camera = data.Camera

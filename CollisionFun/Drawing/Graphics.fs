@@ -3,7 +3,7 @@
 open OpenTK
 open OpenTK.Graphics.OpenGL
 
-let FillCircle (color : Color) (center : Vector2d) (radius : float) : unit =
+let FillCircle (color : Color) (radius : float) (center : Vector2d) : unit =
     GL.Enable EnableCap.PointSmooth
     radius
     |> (*) 2.0

@@ -1,34 +1,38 @@
 ﻿module Interfaces
 
 open OpenTK
-open System.ComponentModel
-open System
+
+type BuildMode =
+    | Point
 
 type InputMode =
-    | CameraControl
+    | StandardControl
+    | ActorBuildUp
     | CameraPan
     | RotateLeft
     | RotateRight
-    | None
 
 type public AppPoint =
     | WorldPoint of Vector2d
     | DisplayPoint of Vector2d
 
-type public IActor =
+type public IActorData =
     abstract member Move : Vector2d -> unit
     abstract member Accelerate : Vector2d -> unit
     abstract member Position : Vector2d
     abstract member Velocity : Vector2d
 
+type Actor =
+    | PointActor of IActorData
+
 type public IActorDisplayer =
-    abstract member Draw : IActor -> unit
+    abstract member Draw : Actor -> unit
 
 type public IWorldPhysics =
     abstract member Tick : float -> unit
-    abstract member AddActor : IActor -> unit
-    abstract member RemoveActor : IActor -> unit
-    abstract member Actors : IActor list
+    abstract member AddActor : Actor -> unit
+    abstract member RemoveActor : Actor -> unit
+    abstract member Actors : Actor list
 
 type public ICamera =
     abstract member ScaleFactor : float
@@ -45,7 +49,9 @@ type public IApplicationData =
     abstract member Camera : ICamera
     abstract member Physics : IWorldPhysics
     abstract member ActorDisplayer : IActorDisplayer
-    abstract member Mode : InputMode with get, set
+    abstract member InputMode : InputMode with get, set
+    abstract member BuildMode : BuildMode with get, set
+    abstract member CachedActor : Actor option with get, set
     abstract member WindowBoundaries : Rectangle with get, set
 
 type public IApplication =

@@ -4,27 +4,27 @@ open OpenTK
 open Interfaces
 
 let aKeyDown (data : IApplicationData) (angle : int) : unit =
-    match data.Mode with
+    match data.InputMode with
     | RotateLeft
-    | CameraControl -> 
+    | StandardControl -> 
         data.Camera.Rotate angle
-        data.Mode <- RotateLeft
+        data.InputMode <- RotateLeft
     | _ -> ()
 
 let aKeyUp (data : IApplicationData) : unit =
-    match data.Mode with
-    | RotateLeft -> data.Mode <- CameraControl
+    match data.InputMode with
+    | RotateLeft -> data.InputMode <- StandardControl
     | _ -> ()
 
 let dKeyDown (data : IApplicationData) (angle : int) : unit =
-    match data.Mode with
+    match data.InputMode with
     | RotateRight
-    | CameraControl ->
+    | StandardControl ->
         data.Camera.Rotate (- angle)
-        data.Mode <-RotateRight
+        data.InputMode <-RotateRight
     | _ -> ()
 
 let dKeyUp (data : IApplicationData) : unit =
-    match data.Mode with
-    | RotateRight -> data.Mode <- CameraControl
+    match data.InputMode with
+    | RotateRight -> data.InputMode <- StandardControl
     | _ -> ()
