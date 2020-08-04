@@ -6,15 +6,19 @@ open MouseInput
 open KeyInput
 
 let OnMouseButtonDown (data : IApplicationData) (e : MouseButtonEventArgs) : unit =
+    let point = 
+        e.Position
+        |> mapMouseOnDisplay data
     match e.Button with
     | MouseButton.Middle ->
-        e.Position
-        |> mapMouseOnDisplay data
+        point
         |> middleMouseButtonDown data
     | MouseButton.Left ->
-        e.Position
-        |> mapMouseOnDisplay data
+        point
         |> leftMouseButtonDown data
+    | MouseButton.Right ->
+        point
+        |> rightMouseButtonDown data
     | _ -> ()
 
 

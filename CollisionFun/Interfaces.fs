@@ -10,13 +10,11 @@ type public IActorData =
 
 type Actor =
     | PointActor of IActorData
-    | TriangleActor of IActorData * Vector2d * Vector2d * Vector2d
+    | PolygonActor of IActorData * Vector2d list
 
 type BuildMode =
     | Point
-    | Triangle
-    | Triangle1 of Vector2d
-    | Triangle2 of Vector2d * Vector2d
+    | Polygon of Vector2d list
 
 type InputMode =
     | StandardControl
