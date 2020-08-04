@@ -2,8 +2,21 @@
 
 open OpenTK
 
+type public IActorData =
+    abstract member Move : Vector2d -> unit
+    abstract member Accelerate : Vector2d -> unit
+    abstract member Position : Vector2d
+    abstract member Velocity : Vector2d
+
+type Actor =
+    | PointActor of IActorData
+    | TriangleActor of IActorData * Vector2d * Vector2d * Vector2d
+
 type BuildMode =
     | Point
+    | Triangle
+    | Triangle1 of Vector2d
+    | Triangle2 of Vector2d * Vector2d
 
 type InputMode =
     | StandardControl
@@ -15,15 +28,6 @@ type InputMode =
 type public AppPoint =
     | WorldPoint of Vector2d
     | DisplayPoint of Vector2d
-
-type public IActorData =
-    abstract member Move : Vector2d -> unit
-    abstract member Accelerate : Vector2d -> unit
-    abstract member Position : Vector2d
-    abstract member Velocity : Vector2d
-
-type Actor =
-    | PointActor of IActorData
 
 type public IActorDisplayer =
     abstract member Draw : Actor -> unit

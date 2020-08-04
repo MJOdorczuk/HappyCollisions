@@ -19,5 +19,5 @@ type ApplicationData(windowBoundaries : Rectangle) =
             displayer
         member val InputMode = StandardControl with get, set
         member val WindowBoundaries = windowBoundaries with get, set
-        member val BuildMode : BuildMode = BuildMode.Point with get, set
+        member val BuildMode : BuildMode = BuildMode.Triangle with get, set
         member val CachedActor : Actor option = None with get, set
