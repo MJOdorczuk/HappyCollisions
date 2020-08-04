@@ -10,18 +10,21 @@ let CreatePointActor (velocity : Vector2d) (position : Vector2d) : Actor =
     :> IActorData
     |> PointActor
 
-let CreateTriangleActor (velocity : Vector2d) (a : Vector2d) (b : Vector2d) (c : Vector2d) : Actor =
-    let midpoint = (a + b + c) / 3.0
-    let data =  
+let CreatePolygonActor (velocity : Vector2d) (points : Vector2d list) : Actor =
+    let midpoint = 
+        points
+        |> List.fold (+) (Vector2d(0.0, 0.0))
+        |> (*) (1.0 / float points.Length)
+    let data =
         (midpoint, velocity)
         |> ActorData
         :> IActorData
-    TriangleActor (data, a - midpoint, b - midpoint, c - midpoint)
+    PolygonActor (data, points |> List.map (fun point -> point - midpoint))
 
 let ActorsData (actor : Actor) : IActorData =
     match actor with
     | PointActor data -> data
-    | TriangleActor (data, _, _, _) -> data
+    | PolygonActor (data, _) -> data
 
 let MoveActor (delta : Vector2d) (actor : Actor) : unit =
     let data = ActorsData actor in

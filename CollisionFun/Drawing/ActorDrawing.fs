@@ -16,8 +16,8 @@ type CustomActorDisplayer (camera : ICamera) =
                 |> WorldPoint
                 |> camera.ProjectToDisplay
                 |> FillCircle Color.Red 5.0
-            | TriangleActor (data, a, b, c) ->
-                [a; b; c]
+            | PolygonActor (data, points) ->
+                points
                 |> List.map (fun point -> point + data.Position)
                 |> List.map WorldPoint
                 |> List.map camera.ProjectToDisplay
