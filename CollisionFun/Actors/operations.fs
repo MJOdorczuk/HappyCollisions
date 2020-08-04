@@ -4,12 +4,6 @@ open Interfaces
 open OpenTK
 open ActorData
 
-let CreatePointActor (velocity : Vector2d) (position : Vector2d) : Actor =
-    (position, velocity)
-    |> ActorData
-    :> IActorData
-    |> PointActor
-
 let CreatePolygonActor (velocity : Vector2d) (points : Vector2d list) : Actor =
     let midpoint = 
         points
@@ -23,7 +17,6 @@ let CreatePolygonActor (velocity : Vector2d) (points : Vector2d list) : Actor =
 
 let ActorsData (actor : Actor) : IActorData =
     match actor with
-    | PointActor data -> data
     | PolygonActor (data, _) -> data
 
 let MoveActor (delta : Vector2d) (actor : Actor) : unit =
@@ -41,3 +34,10 @@ let PositionOfActor (actor : Actor) : Vector2d =
 let VelocityOfActor (actor : Actor) : Vector2d =
     let data = ActorsData actor in
     data.Velocity
+
+let Points (actor : Actor) : Vector2d list =
+    match actor with
+    | PolygonActor (data, points) ->
+        points
+        |> List.map (fun point -> point + data.Position)
+    | _ -> []

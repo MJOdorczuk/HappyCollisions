@@ -9,11 +9,9 @@ type public IActorData =
     abstract member Velocity : Vector2d
 
 type Actor =
-    | PointActor of IActorData
     | PolygonActor of IActorData * Vector2d list
 
 type BuildMode =
-    | Point
     | Polygon of Vector2d list
 
 type InputMode =
@@ -26,9 +24,6 @@ type InputMode =
 type public AppPoint =
     | WorldPoint of Vector2d
     | DisplayPoint of Vector2d
-
-type public IActorDisplayer =
-    abstract member Draw : Actor -> unit
 
 type public IWorldPhysics =
     abstract member Tick : float -> unit
@@ -50,11 +45,9 @@ type public ICamera =
 type public IApplicationData =
     abstract member Camera : ICamera
     abstract member Physics : IWorldPhysics
-    abstract member ActorDisplayer : IActorDisplayer
     abstract member InputMode : InputMode with get, set
     abstract member BuildMode : BuildMode with get, set
     abstract member CachedActor : Actor option with get, set
     abstract member WindowBoundaries : Rectangle with get, set
+    abstract member LastTargetPoint : AppPoint with get, set
 
-type public IApplication =
-    abstract member Camera : ICamera
