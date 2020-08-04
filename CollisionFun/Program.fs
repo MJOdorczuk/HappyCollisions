@@ -11,5 +11,5 @@ let TITLE : string = "Collision fun" in
 let main _ =
     let window = new GameWindow(WIDTH, HEIGHT, GraphicsMode.Default, TITLE, GameWindowFlags.FixedWindow) in
     let app = Application(window) in
-    window.Run()
+    app.Run()
     0

@@ -2,7 +2,6 @@
 
 open OpenTK
 open Interfaces
-open Actors.ActorData
 open Actors.Operations
 
 let zeroVelocity = Vector2d(0.0, 0.0)
@@ -36,10 +35,6 @@ let leftMouseButtonDown (data : IApplicationData) (point : Vector2d) : unit =
     match data.InputMode with
     | StandardControl ->
         match data.BuildMode with
-        | Point -> 
-            point
-            |> CreatePointActor zeroVelocity
-            |> data.Physics.AddActor
         | Polygon points ->
             data.BuildMode <- Polygon (point::points)
     | _ -> ()
@@ -60,6 +55,7 @@ let rightMouseButtonDown (data : IApplicationData) (point : Vector2d) : unit =
     | _ -> ()
 
 let mouseMove (data : IApplicationData) (point : Vector2d) : unit =
+    data.LastTargetPoint <- DisplayPoint point
     match data.InputMode with
     | CameraPan ->
         do point

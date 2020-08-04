@@ -9,12 +9,13 @@ open OpenTK.Input
 open Drawing.Background
 open IOManager.Input.InputControls
 open IOManager.ApplicationData
-open Actors.ActorData
+open Drawing.ActorDrawing
+open Actors.Operations
+
+let zeroVector = Vector2d(0.0, 0.0)
 
 let WindowLoad (e : EventArgs) : unit =
     ()
-
-
 
 let WindowUpdateFrame (e : FrameEventArgs) : unit =
     ()
@@ -31,17 +32,30 @@ type public Application(window : GameWindow) =
     do WindowClosing |> window.Closing.Add
     let data = ApplicationData(window.Bounds) :> IApplicationData
     let backgroundPainter = BackgroundPainter(5, 3, Color.FromArgb(255, 5, 5, 25), Color.White)
-    let WindowRenderFrame (_ : FrameEventArgs) : unit =
-        data.Physics.Tick 0.1
+
+    let WindowRenderFrame (e : FrameEventArgs) : unit =
+        data.Physics.Tick e.Time
         backgroundPainter.ClearBackground()
         let l = [Vector2d(-1.0, -1.0); Vector2d(-1.0, 1.0); Vector2d(1.0, 1.0); Vector2d(1.0, -1.0)]
-        let delimiters = l |> List.map (fun v -> v |> DisplayPoint |> data.Camera.ProjectToWorld)
-        backgroundPainter.DrawMesh data.Camera.Focus delimiters (fun v -> v |> WorldPoint |> data.Camera.ProjectToDisplay)
+        let delimiters = l |> List.map (DisplayPoint >> data.Camera.ProjectToWorld)
+        backgroundPainter.DrawMesh data.Camera.Focus delimiters (WorldPoint >> data.Camera.ProjectToDisplay)
         data.Physics.Actors
-        |> List.map data.ActorDisplayer.Draw
+        |> List.map (DrawActor data.Camera)
         |> ignore
+        let target = data.Camera.ProjectToWorld data.LastTargetPoint
+        match data.InputMode with
+        | StandardControl ->
+            let points =
+                match data.BuildMode with
+                | Polygon points -> points
+                | _ -> []
+            target::points
+            |> CreatePolygonActor zeroVector
+            |> DrawActor data.Camera
+        | _ -> ()
         GL.Flush()
         window.SwapBuffers()
+
     let MouseButtonDown (e : MouseButtonEventArgs) : unit =
         OnMouseButtonDown data e
     let MouseButtonUp (e : MouseButtonEventArgs) : unit =
@@ -61,10 +75,5 @@ type public Application(window : GameWindow) =
     do window.MouseWheel.Add MouseWheelMove
     do window.KeyDown.Add KeyDown
     do window.KeyUp.Add KeyUp
-    let actor = 
-        ActorData(Vector2d(0.0, 0.0), Vector2d(0.1, 0.5))
-        :> IActorData
-        |> PointActor
-    do data.Physics.AddActor actor
-    interface IApplication with
-        member __.Camera = data.Camera
+    member __.Run : unit -> unit =
+        window.Run
