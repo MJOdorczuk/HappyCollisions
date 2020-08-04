@@ -2,18 +2,8 @@
 
 open OpenTK
 open OpenTK.Graphics.OpenGL
-
-let FillCircle (color : Color) (radius : float) (center : Vector2d) : unit =
-    GL.Enable EnableCap.PointSmooth
-    radius
-    |> (*) 2.0
-    |> float32
-    |> GL.PointSize
-    
-    GL.Begin PrimitiveType.Points
-    GL.Color4 color
-    GL.Vertex2 center
-    GL.End ()
+open System
+open Utils
 
 let DrawLine (color : Color) (a : Vector2d) (b : Vector2d) : unit =
     GL.Begin PrimitiveType.Lines
@@ -37,4 +27,33 @@ let DrawLineLoop (color : Color) (points : Vector2d list) : unit =
     points
     |> List.map GL.Vertex2
     |> ignore
-    |> GL.End
+    GL.End ()
+
+let FillLineLoop (color : Color) (points : Vector2d list) : unit =
+    GL.Begin PrimitiveType.TriangleFan
+    GL.PolygonMode (MaterialFace.FrontAndBack, PolygonMode.Fill)
+    GL.Color4 color
+    points
+    |> List.map GL.Vertex2
+    |> ignore
+    GL.End ()
+
+let DrawCircle (color : Color) (radius : float) (center : Vector2d) : unit =
+    let resolution = 100
+    [1..resolution]
+    |> List.map float
+    |> List.map (fun i -> i * Math.PI * 2.0 / float resolution)
+    |> List.map fromAngle
+    |> List.map (fun v -> v * radius)
+    |> List.map (fun v -> v + center)
+    |> DrawLineLoop color
+
+let FillCircle (color : Color) (radius : float) (center : Vector2d) : unit =
+    let resolution = 100
+    [1..resolution]
+    |> List.map float
+    |> List.map (fun i -> i * Math.PI * 2.0 / float resolution)
+    |> List.map fromAngle
+    |> List.map (fun v -> v * radius)
+    |> List.map (fun v -> v + center)
+    |> FillLineLoop color

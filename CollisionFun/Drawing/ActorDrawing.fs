@@ -13,5 +13,5 @@ let DrawActor (camera : ICamera) (actor : Actor) : unit =
     |> Points
     |> List.map WorldPoint
     |> List.map camera.ProjectToDisplay
-    >>= (List.map (FillCircle Color.Green 5.0))
+    >>= (List.map (FillCircle Color.Green 0.01))
     |> DrawLineLoop Color.Green
