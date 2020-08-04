@@ -27,4 +27,8 @@
     <PackageReference Include="OpenTK.NetStandard" Version="1.0.5.22" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GeometryLibrary\GeometryLibrary.fsproj" />
+  </ItemGroup>
+
 </Project>
