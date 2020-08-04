@@ -30,3 +30,9 @@ let DrawLines (color : Color) (ends : (Vector2d * Vector2d) list) : unit =
                                do GL.Vertex2 b)
     |> ignore
     GL.End ()
+
+let DrawLineLoop (color : Color) (points : Vector2d list) : unit =
+    points
+    |> List.permute (fun i -> (i + 1) % points.Length)
+    |> List.zip points
+    |> DrawLines color

@@ -3,6 +3,7 @@
 open OpenTK
 open Interfaces
 open Actors.ActorData
+open Actors.Operations
 
 let mapMouseOnDisplay (data : IApplicationData) (point : Point) : Vector2d =
     let width = float data.WindowBoundaries.Width
@@ -27,15 +28,24 @@ let middleMouseButtonUp (data : IApplicationData) (point : Vector2d) : unit =
     | _ -> ()
 
 let leftMouseButtonDown (data : IApplicationData) (point : Vector2d) : unit =
+    let point = point
+                |> DisplayPoint
+                |> data.Camera.ProjectToWorld
     match data.InputMode with
     | StandardControl ->
-        point
-        |> DisplayPoint
-        |> data.Camera.ProjectToWorld
-        |> ActorData
-        :> IActorData
-        |> PointActor
-        |> data.Physics.AddActor
+        let zeroVelocity = Vector2d(0.0, 0.0)
+        match data.BuildMode with
+        | Point -> 
+            point
+            |> CreatePointActor zeroVelocity
+            |> data.Physics.AddActor
+        | Triangle -> data.BuildMode <- Triangle1 point
+        | Triangle1 a -> data.BuildMode <- Triangle2 (a, point)
+        | Triangle2 (a, b) -> 
+            (a, b, point)
+            |||> CreateTriangleActor zeroVelocity
+            |> data.Physics.AddActor
+            data.BuildMode <- Triangle
     | _ -> ()
 
 let mouseMove (data : IApplicationData) (point : Vector2d) : unit =

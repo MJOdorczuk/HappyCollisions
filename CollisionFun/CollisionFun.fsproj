@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Utils.fs" />
     <Compile Include="Interfaces.fs" />
     <Compile Include="Actors\ActorData.fs" />
     <Compile Include="Actors\Operations.fs" />
