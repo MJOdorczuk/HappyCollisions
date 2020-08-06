@@ -51,7 +51,6 @@ let rightMouseButtonDown (data : IApplicationData) (point : Vector2d) : unit =
             |> CreatePolygonActor zeroVelocity
             |> data.Physics.AddActor
             data.BuildMode <- Polygon []
-        | _ -> ()
     | _ -> ()
 
 let mouseMove (data : IApplicationData) (point : Vector2d) : unit =

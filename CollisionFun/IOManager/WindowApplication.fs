@@ -48,7 +48,6 @@ type public Application(window : GameWindow) =
             let points =
                 match data.BuildMode with
                 | Polygon points -> points
-                | _ -> []
             target::points
             |> CreatePolygonActor zeroVector
             |> DrawActor data.Camera
