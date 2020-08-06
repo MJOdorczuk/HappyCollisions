@@ -40,4 +40,3 @@ let Points (actor : Actor) : Vector2d list =
     | PolygonActor (data, points) ->
         points
         |> List.map (fun point -> point + data.Position)
-    | _ -> []
