@@ -1,4 +1,4 @@
-﻿module GeometryLibraryTests.Vectors
+﻿namespace GeometryLibraryTests.Vectors
 
 open System
 open OpenTK
