@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Include="Utils.fs" />
     <Compile Include="Vectors\OperationsTests.fs" />
+    <Compile Include="Lines\OperationsTests.fs" />
   </ItemGroup>
 
   <ItemGroup>

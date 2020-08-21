@@ -24,3 +24,6 @@ let Limit (_value : double) (_range : double) =
 
 let LimitAngle =
     fun (angle : double) -> Limit angle (Math.PI * 2.0)
+
+let Between (a : float) (b : float) (value : float) : bool =
+    (a > value && value > b) || (a < value && value < b)

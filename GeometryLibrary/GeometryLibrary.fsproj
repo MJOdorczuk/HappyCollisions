@@ -8,6 +8,7 @@
     <Compile Include="Utils.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Vectors\Operations.fs" />
+    <Compile Include="Lines\Operations.fs" />
   </ItemGroup>
 
   <ItemGroup>

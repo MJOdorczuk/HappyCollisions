@@ -24,24 +24,24 @@ type OperationsTests () =
 
     [<TestMethod>]
     member __.AngleTest () : unit =
-        let reversability ((u, _) : Vector2d * 'a) : bool =
+        let commutative ((u, _) : Vector2d * 'a) : bool =
             let angle = Angle u
             let v = Vector2d (cos angle, sin angle) * Length u
             proxime u v
         let properties = [
-            reversability, "Reversability"]
+            commutative, "Commutative"]
         standardTest properties
 
     [<TestMethod>]
     member __.NormalizeTest () : unit =
-        let reversability ((u, _) : Vector2d * 'a) : bool =
+        let commutative ((u, _) : Vector2d * 'a) : bool =
             let v = 
                 u
                 |> Normalize
                 |> (*) (Length u)
             proxime v u
         let properties = [
-            reversability, "Reversability"]
+            commutative, "Commutative"]
         standardTest properties
 
     [<TestMethod>]
