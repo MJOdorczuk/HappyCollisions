@@ -52,26 +52,21 @@ let DistanceTo (line : Line) (point : Vector2d) : float =
 
 let ProjectOn ((a, b) : Line) (point : Vector2d) : Vector2d =
     let dir = Direction (a, b) in
-    a
-    |> (+) -point
+    point
+    |> (+) -a
     |> Vecops.DotProduct dir
     |> (*) dir
     |> (+) a
 
 let CrossPoint ((a, b) : Line) (l2 : Line) : Vector2d =
-    let v1 = Direction (a, b) in
-    l2 
-    |> Bisector
-    |> Direction
-    |> Vecops.DotProduct v1
-    |> (fun v -> 1.0 / v)
-    |> (*) v1
-    |> (*) (DistanceTo l2 a)
-    |> (+) a
+    let h = ProjectOn l2 a - a
+    let dir = Direction (a, b)
+    let hls = h.LengthSquared
+    hls / (Vecops.DotProduct h dir) * dir + a
 
 let ProjectsInside ((a, b) : Line) (point : Vector2d) : bool =
     let projected = ProjectOn (a, b) point
-    (point.X |> Between a.X b.X) && (point.Y |> Between a.Y b.Y)
+    (projected.X |> Between a.X b.X) && (projected.Y |> Between a.Y b.Y)
 
 let ApplyToPoints (modification : Vector2d -> Vector2d) ((a, b) : Line) : Line =
     modification a, modification b

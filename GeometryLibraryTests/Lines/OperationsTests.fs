@@ -1,6 +1,5 @@
 ﻿namespace GeometryLibraryTests.Lines
 
-open System
 open OpenTK
 open GeometryLibrary.Types
 open GeometryLibrary.Lines.Operations
@@ -180,6 +179,91 @@ type OperationsTests () =
         let consistency (((a, b), _) : Line * 'a) : bool =
             let c, d = Reverse (a, b)
             proxime a d && proxime b c
+        let properties = [
+            consistency, "Consistency"]
+        standardTest properties
+
+    [<TestMethod>]
+    member __.BisectorTest () : unit =
+        let orthogonality ((line, _) : Line * 'a) : bool =
+            let bisector = Bisector line
+            abs (Vecops.DotProduct (Direction line) (Direction bisector)) < delta
+        let equidistance (((a, b), _) : Line * 'a) : bool =
+            let c, d = Bisector (a, b)
+            let diff1 = Vecops.Length (a - c) - Vecops.Length (b - c)
+            let diff2 = Vecops.Length (a - d) - Vecops.Length (b - d)
+            abs diff1 < delta && abs diff2 < delta
+        let properties = [
+            orthogonality, "Orthogonality";
+            equidistance, "Equidistance"]
+        standardTest properties
+
+    [<TestMethod>]
+    member __.DistanceToTest () : unit =
+        let selfProximity (((a, b), _) : Line * 'a) : bool =
+            abs (DistanceTo (a, b) a) < delta && abs (DistanceTo (a, b) b) < delta
+        let rhombusHeight (((a, b), (c, _)) : Line * Line) : bool =
+            let h = DistanceTo (a, b) c
+            let l = Length (a, b)
+            let s1 = b - a
+            let s2 = c - a
+            let cross = abs (Vecops.CrossProduct s1 s2)
+            let surface = h * l
+            abs (surface - cross) < delta
+        let positiveResult (((a, b), (c, _)) : Line * Line) : bool =
+            DistanceTo (a, b) c >= 0.0
+        let properties = [
+            selfProximity, "Self proximity";
+            rhombusHeight, "Rhombus height";
+            positiveResult, "Positive result"]
+        standardTest properties
+
+    [<TestMethod>]
+    member __.ProjectOnTest () : unit =
+        let selfProximity (((a, b), _) : Line * 'a) : bool =
+            proxime (ProjectOn (a, b) a) a
+        let collinearity (((a, b), (c, _)) : Line * Line) : bool =
+            let d = ProjectOn (a, b) c
+            let diff1 = d - a
+            let diff2 = b - d
+            proxime diff1 (diff2 * diff1.X / diff2.X)
+        let orthogonality (((a, b), (c, _)) : Line * Line) : bool =
+            let d = ProjectOn (a, b) c
+            let diff1, diff2 = a - b, c - d
+            let dot = Vecops.DotProduct diff1 diff2 
+            abs dot < delta
+        let minimalDistance (((a, b), (c, _)) : Line * Line) : bool =
+            let d = ProjectOn (a, b) c
+            let l1 = Vecops.Length (d - c)
+            let l2 = DistanceTo (a, b) c
+            abs (l1 - l2) < delta
+        let properties = [
+            selfProximity, "Self proximity";
+            collinearity, "Collinearity";
+            orthogonality, "Orthogonality";
+            minimalDistance, "Minimal distance"]
+        standardTest properties
+
+    [<TestMethod>]
+    member __.CrossPointTest () : unit =
+        let resultContainment ((l1, l2) : Line * Line) : bool =
+            let x = CrossPoint l1 l2
+            let projected1 = ProjectOn l1 x
+            let projected2 = ProjectOn l2 x
+            proxime projected1 projected2
+        let properties = [
+            resultContainment, "Result containment"]
+        standardTest properties
+
+    [<TestMethod>]
+    member __.ProjectsInsideTest () : unit =
+        let consistency (((a, b), (point, _)) : Line * Line) : bool =
+            let c = ProjectOn (a, b) point
+            let acbx = a.X <= c.X && c.X <= b.X
+            let bcax = b.X <= c.X && c.X <= a.X
+            let acby = a.Y <= c.Y && c.Y <= b.Y
+            let bcay = b.Y <= c.Y && c.Y <= a.Y
+            ((acbx || bcax) && (acby || bcay)) = ProjectsInside (a, b) point
         let properties = [
             consistency, "Consistency"]
         standardTest properties

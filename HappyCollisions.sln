@@ -9,7 +9,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GeometryLibrary", "Geometry
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{ED51BF50-CEAF-4FB6-B72B-578B14DB0FC3}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GeometryLibraryTests", "GeometryLibraryTests\GeometryLibraryTests.fsproj", "{4E6F31DE-EDAE-40B5-A565-FC01B9096C57}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GeometryLibraryTests", "GeometryLibraryTests\GeometryLibraryTests.fsproj", "{4E6F31DE-EDAE-40B5-A565-FC01B9096C57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
